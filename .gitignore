@@ -1,0 +1,26 @@
+# Claude Code local settings (machine-specific)
+.claude/settings.local.json
+
+# Build artifacts
+build/
+twister-out/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Flutter
+spoton-app/.dart_tool/
+spoton-app/.packages
+spoton-app/build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*~
+
+# OS
+.DS_Store
+Thumbs.db
