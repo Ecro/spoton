@@ -341,15 +341,16 @@ Weight budget: nRF54L15 ~0.15g + ICM-42688-P+ADXL372+nPM1100+passives ~0.4g + PC
 
 | # | Part | Model | Cost |
 |---|------|-------|------|
-| 1 | Dev Kit | nRF52840 DK (PCA10056) or nRF54L15 DK | $42 |
-| 2 | IMU | ICM-42688-P Breakout (SparkFun) | $12 |
-| 3 | High-g Accel | ADXL372 Breakout (Adafruit #4374) | $12 |
-| 4 | Battery | LiPo 3.7V 100mAh | $3 |
-| 5 | Charger | TP4056 USB-C (dev use) | $2 |
-| 6 | Misc | Jumper wires, tape, velcro | $5 |
-| | **Total** | | **~$76** |
+| 1 | Dev Kit | nRF54L15 DK (Nordic) | ~$42 |
+| 2 | IMU Eval Board | EV_ICM-42688-P (TDK InvenSense) | ~$15 |
+| 3 | High-g Accel Eval Board | EVAL-ADXL372Z (Analog Devices) | ~$25 |
+| 4 | Battery | Adafruit 1570 — LiPo 3.7V 100mAh | ~$6 |
+| 5 | Charger | Adafruit 4410 — Micro-Lipo USB-C | ~$7 |
+| 6 | Misc | Jumper wires, tape, velcro | ~$5 |
+| | **Total** | | **~$100** |
 
-> **Dev Kit Strategy:** nRF52840 DK is proven and widely available. nRF54L15 DK is recommended for future-proofing. Both are supported by Zephyr with board abstraction — firmware is portable. Decision: see Q8 in Open Questions.
+> **Dev Kit Decision (resolved):** nRF54L15 DK selected. Firmware targets nRF54L15 directly — no porting step needed for custom PCB.
+> **Supplier:** All parts available from Mouser Korea (kr.mouser.com) in single order.
 
 ### 3.6 Custom PCB BOM (Phase 2)
 
@@ -993,7 +994,7 @@ Racket face 5×5 grid (4cm spacing):
 | Q5 | Pogo pin charge dock magnet alignment reliability? | Phase 3 | Charging UX |
 | Q6 | MCUboot BLE DFU implementation timing (Phase 2 vs Phase 3)? | Phase 2 | OTA availability |
 | Q7 | **1600Hz vs 800Hz ODR** — does higher sampling rate improve vibration harmonic capture for position estimation? | Phase 1 | Feature quality, power, buffer sizes |
-| Q8 | **nRF52840 DK vs nRF54L15 DK for Phase 0?** Firmware is portable, but DT overlays and pin assignments differ. | Pre-Phase 0 | Dev environment, build commands |
+| Q8 | ~~nRF52840 DK vs nRF54L15 DK for Phase 0?~~ **RESOLVED: nRF54L15 DK selected.** No porting step needed. | Pre-Phase 0 | Dev environment, build commands |
 | Q9 | **ICM-42688-P 16-bit vs 20-bit FIFO mode** — 20-bit gives 16× more resolution but increases buffer size from 2,200B to ~3,000B per imu_q slot. | Phase 0 | RAM budget, feature precision |
 | Q10 | **Does ADXL372 100mg/LSB resolution provide sufficient discrimination** for impact position ML features? | Phase 1 | ML accuracy, sensor choice validation |
 | Q11 | **ZMS API differences from FCB/NVS** — how do they affect session.c and calibration.c design patterns? | Phase 0 | Storage architecture |
