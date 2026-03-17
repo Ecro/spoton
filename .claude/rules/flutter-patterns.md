@@ -1,3 +1,10 @@
+---
+globs:
+  - "spoton-app/**/*.dart"
+  - "spoton-app/pubspec.yaml"
+  - "spoton-app/pubspec.lock"
+---
+
 # Flutter / Dart Coding Patterns
 
 ## State Management

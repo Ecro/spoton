@@ -1,3 +1,14 @@
+---
+globs:
+  - "src/**/*.c"
+  - "src/**/*.h"
+  - "boards/**"
+  - "**/*.overlay"
+  - "prj.conf"
+  - "Kconfig"
+  - "CMakeLists.txt"
+---
+
 # C / Zephyr Coding Patterns
 
 ## Language
