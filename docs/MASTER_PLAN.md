@@ -103,7 +103,7 @@ Sensor           Accuracy           Storage              Open Source
 **Go/Kill Gate:**
 - [ ] Full session capture -> BLE sync -> app display works
 - [ ] ZMS partition handles 500+ shots without corruption
-- [ ] BLE sync of 1-hour session <5 seconds
+- [ ] BLE sync of 1-hour session <15 seconds
 - [ ] Battery lasts 4+ hours continuous
 - [ ] No crashes across 10 court sessions
 
@@ -119,12 +119,12 @@ Sensor           Accuracy           Storage              Open Source
 
 **Objective:** Dampener form factor, power optimization, open-source release with documentation.
 
-**Hardware:** Custom PCB 28x11mm + TPU case + pogo charge dock (~$60 for 1pcs)
+**Hardware:** Custom folded flex PCB ~22x26mm + TPU case + pogo charge dock (~$60 for 1pcs)
 
 **Depends on Phase 2:** Stable firmware + working Flutter app
 
 **Key Deliverables:**
-- Custom PCB design (KiCad) — all components on 28x11mm board
+- Custom PCB design (KiCad) — folded flex ~22x26mm, dampener form factor
 - 3D printed TPU dampener case + pogo pin charge dock
 - SLEEP/ARMED power optimization (target: 4h+ battery on 100mAh)
 - CSV/PNG export in Flutter app
@@ -183,7 +183,7 @@ ZMS validation ─────────────────────�
 | Face angle accuracy | +-5deg | Phase 1 |
 | Battery life | 4+ hours | Phase 3 |
 | Weight | <=10g | Phase 3 |
-| BLE sync time | <5 seconds (1h session) | Phase 2 |
+| BLE sync time | <15 seconds (1h session, real-world CI) | Phase 2 |
 
 ## Risk Register Summary
 
