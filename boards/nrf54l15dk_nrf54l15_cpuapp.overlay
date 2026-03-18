@@ -54,20 +54,20 @@
 	cs-gpios = <&gpio1 12 GPIO_ACTIVE_LOW>,   /* CS0: ICM-42688-P */
 		   <&gpio1 13 GPIO_ACTIVE_LOW>;   /* CS1: ADXL372 */
 
-	/* ICM-42688-P — 6-axis IMU (vibration analysis + gyro) */
+	/* ICM-42688-P — 6-axis IMU (vibration analysis + gyro)
+	 * Raw SPI (Option A): Zephyr driver not used due to FIFO bugs (#84833)
+	 * and missing AAF Bank 2 configuration support. */
 	icm42688p: icm42688p@0 {
-		compatible = "invensense,icm42688";
+		compatible = "vnd,spi-device";
 		reg = <0>;
 		spi-max-frequency = <10000000>;
-		int-gpios = <&gpio1 14 GPIO_ACTIVE_LOW>;
-		/* INT2 (WOM) reserved for Phase 2: P1.08 */
 	};
 
-	/* ADXL372 — High-g accelerometer (impact capture) */
+	/* ADXL372 — High-g accelerometer (impact capture)
+	 * Raw SPI (Option A): Zephyr driver lacks FIFO watermark trigger. */
 	adxl372: adxl372@1 {
-		compatible = "adi,adxl372";
+		compatible = "vnd,spi-device";
 		reg = <1>;
 		spi-max-frequency = <10000000>;
-		int1-gpios = <&gpio1 15 GPIO_ACTIVE_HIGH>;  /* Requires INT_POL=0 (default) */
 	};
 };
