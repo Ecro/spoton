@@ -1,0 +1,73 @@
+/*
+ * SpotOn — Phase 0 Device Tree Overlay
+ * Board: nRF54L15-DK (nrf54l15dk/nrf54l15/cpuapp)
+ *
+ * SPI bus: SPIM21 on Port 1 (avoids UART20 conflict on SPIM20,
+ *          avoids QSPI flash solder bridges on Port 2/SPIM00)
+ *
+ * Pin assignments (from Nordic DevZone validated examples):
+ *   SCK  = P1.09  (clock pin for SPIM21 — validated from Nordic DevZone example)
+ *   MOSI = P1.10
+ *   MISO = P1.11
+ *   CS0  = P1.12  (ICM-42688-P)
+ *   CS1  = P1.13  (ADXL372)
+ *
+ * Interrupts:
+ *   INT0 = P1.14  (ICM-42688-P INT1 — FIFO watermark)
+ *   INT1 = P1.15  (ADXL372 INT1 — FIFO watermark)
+ *
+ * LED: uses DK onboard LED0 (already defined in DK devicetree)
+ *
+ * SPI Mode 0 (CPOL=0, CPHA=0) — compatible with both sensors.
+ * Bus speed: 10MHz (limited by ADXL372 max SPI speed).
+ *
+ * TODO(Phase 0 bring-up): Verify actual SPI clock with logic analyzer.
+ *   If SPIM21 cannot achieve 10MHz on Port 1, move to SPIM20 on Port 0
+ *   (requires disabling UART20 or remapping console to different peripheral).
+ */
+
+&pinctrl {
+	spi21_default: spi21_default {
+		group1 {
+			psels = <NRF_PSEL(SPIM_SCK, 1, 9)>,
+				<NRF_PSEL(SPIM_MOSI, 1, 10)>,
+				<NRF_PSEL(SPIM_MISO, 1, 11)>;
+		};
+	};
+
+	spi21_sleep: spi21_sleep {
+		group1 {
+			psels = <NRF_PSEL(SPIM_SCK, 1, 9)>,
+				<NRF_PSEL(SPIM_MOSI, 1, 10)>,
+				<NRF_PSEL(SPIM_MISO, 1, 11)>;
+			low-power-enable;
+		};
+	};
+};
+
+&spi21 {
+	compatible = "nordic,nrf-spim";
+	status = "okay";
+	pinctrl-0 = <&spi21_default>;
+	pinctrl-1 = <&spi21_sleep>;
+	pinctrl-names = "default", "sleep";
+	cs-gpios = <&gpio1 12 GPIO_ACTIVE_LOW>,   /* CS0: ICM-42688-P */
+		   <&gpio1 13 GPIO_ACTIVE_LOW>;   /* CS1: ADXL372 */
+
+	/* ICM-42688-P — 6-axis IMU (vibration analysis + gyro) */
+	icm42688p: icm42688p@0 {
+		compatible = "invensense,icm42688";
+		reg = <0>;
+		spi-max-frequency = <10000000>;
+		int-gpios = <&gpio1 14 GPIO_ACTIVE_LOW>;
+		/* INT2 (WOM) reserved for Phase 2: P1.08 */
+	};
+
+	/* ADXL372 — High-g accelerometer (impact capture) */
+	adxl372: adxl372@1 {
+		compatible = "adi,adxl372";
+		reg = <1>;
+		spi-max-frequency = <10000000>;
+		int1-gpios = <&gpio1 15 GPIO_ACTIVE_HIGH>;  /* Requires INT_POL=0 (default) */
+	};
+};
