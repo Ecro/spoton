@@ -129,39 +129,88 @@ CONFIG_BT_GAP_AUTO_UPDATE_CONN_PARAMS=y
 
 ## Step 2: Data Collection Campaign
 
-Collect 2,500+ labeled impact samples using ball machine + camera.
+Collect labeled impact samples using **stencil ink method** (SmartDampener 논문 검증 방식).
+점진적 수집: 300발 → 평가 → 필요시 추가 (최대 ~1,000발).
 
 **This is a manual/physical step, not a coding step.**
 
-**Protocol (from TECH_SPEC §10):**
-```
-Lab setup:
-  1. Ball machine → consistent trajectory to target zone
-  2. Smartphone 240fps slow-motion captures each impact
-  3. Racket face divided into 5×5 grid (4cm spacing)
-  4. 100 hits per zone × 25 zones = 2,500 samples minimum
-  5. Repeat with 3 different rackets for generalization
+### 라벨링 방법: 스텐실 잉크 (Stencil Ink)
 
-For each hit:
-  - BLE streams full 390ms window to PC (via collect_data.py)
-  - Video captures impact frame
-  - Post-hoc: extract contact (x,y) from video → label_impacts.py
-  - Label accuracy: ~0.5cm
+> SmartDampener (Penn State, 2024)가 3,328발로 3.03cm 정확도 달성한 방법.
+> 240fps 비디오 방식 대비 2배 빠르고 장비 간단.
+
+```
+준비물:
+  - 테니스 스텐실 잉크 (~$5, Amazon/쿠팡)
+  - 흰색 또는 밝은 색 현 (잉크 자국이 잘 보여야 함)
+  - 스마트폰 (일반 사진 — 슬로모션 불필요!)
+  - 젖은 수건 (현 닦기용)
+  - 볼머신 또는 벽 연습
+
+프로토콜 (1발당 ~10초):
+  1. 공에 스텐실 잉크 뿌림 (한 면)
+  2. 라켓으로 공 치기 → BLE로 센서 데이터 자동 저장
+  3. 라켓 면 사진 촬영 (잉크 자국 = ground truth)
+  4. label_impacts.py에서 자국 위치 클릭 → (x, y) 기록
+  5. 젖은 수건으로 현 닦기 (겹침 방지)
+  6. 50발마다 새 공으로 교체 (잉크 무게 증가 방지)
+
+라벨 정확도: ~0.5cm (사진에서 잉크 자국 중심 클릭)
+```
+
+### 점진적 수집 전략 (노동 최소화)
+
+```
+Round 1: 잉크 300발 (1일)
+  - 라켓 면 전체에 고르게 분포하도록 조준
+  - 볼머신 또는 벽 연습으로 다양한 위치에 타구
+  - 각 타구: shot_type도 기록 (FH/BH/SV/VL/SL)
+  → SVR 모델 첫 훈련 → MAE 확인
+
+  결과에 따라 분기:
+    MAE ≤ 4cm → 충분! Round 2 생략 가능
+    MAE 4~6cm → Round 2 진행 (300발 추가)
+    MAE > 6cm → 특징/파라미터 분석 후 Round 2
+
+Round 2: 잉크 300발 추가 (1일, 필요시)
+  - Round 1에서 MAE가 높았던 영역에 집중 수집
+  - 가장자리, 프레임 근처 등 부족한 영역 보강
+  → 총 600발로 재훈련 → MAE 재확인
+
+Round 3: Pseudo-labeling 확장 (선택)
+  - Round 1+2 모델로 실전 플레이 데이터에 의사 라벨 부여
+  - 잉크 없이 자유롭게 플레이 → BLE로 센서 데이터 수집
+  - 모델 추정값이 confident한 것만 훈련 데이터로 추가
+  - 300~500발 자동 확장 (수동 라벨링 0)
+
+예상 총 수동 라벨링: 300~600발 (기존 2,500발 대비 76~88% 감소)
 ```
 
 **Python files:**
-- `tools/label_impacts.py` — video frame labeling tool (click on impact point)
+- `tools/label_impacts.py` — 라켓 면 사진에서 잉크 자국 클릭 → (x, y) 라벨링
 
 **Output:**
-- `data/raw/racket{1,2,3}_zone{01..25}.csv` — raw sensor data
+- `data/raw/round{1,2}/impacts.csv` — raw sensor data
 - `data/labels/impacts.csv` — (impact_id, x_cm, y_cm, shot_type, racket_id)
-- Minimum 2,500 samples across 25 zones × 3 rackets
+- `data/photos/impact_{id}.jpg` — 잉크 자국 사진 (ground truth 보관)
+
+**샷 분류 데이터 (별도 수집):**
+```
+각 샷 종류별 최소 50발:
+  - 포핸드 (FH): 100발
+  - 백핸드 (BH): 100발
+  - 서브 (SV): 50발
+  - 발리 (VL): 50발
+  - 슬라이스 (SL): 50발
+  → 잉크 불필요 (샷 종류만 기록하면 됨)
+  → 위치 수집과 동시 진행 가능 (잉크 + 샷 종류 기록)
+```
 
 **Also collect during this step:**
 - 50+ serves with radar gun readings → swing speed validation dataset
-- Video of face angle at impact → face angle validation dataset
+- 비디오 촬영은 면 각도 검증용으로만 소량 (20발 정도)
 
-**Open question Q7:** If time permits, collect a subset at 1600Hz ODR for comparison with 800Hz. Requires firmware config change + larger FIFO buffers.
+**Open question Q7:** If time permits, collect a subset at 1600Hz ODR for comparison with 800Hz.
 
 ---
 
