@@ -11,11 +11,11 @@
 
 | # | 부품 | 제품명 | Mouser 링크 | 예상가 |
 |---|------|--------|------------|--------|
-| 1 | MCU Dev Kit | nRF54L15-DK (Nordic) | [Mouser](https://www.mouser.com/ProductDetail/Nordic-Semiconductor/nRF54L15-DK?qs=3vio67wFuYon2dql6VAuBQ%3D%3D) | ~$42 |
-| 2 | IMU Eval Board | EV_ICM-42688-P (TDK InvenSense) | [Mouser](https://www.mouser.com/ProductDetail/TDK-InvenSense/EV_ICM-42688-P?qs=hWgE7mdIu5SqHj7syF9KYA%3D%3D) | ~$15 |
-| 3 | High-g Accel Stamp Board | EVAL-ADXL372Z (Analog Devices) | [Mouser](https://www.mouser.com/ProductDetail/Analog-Devices/EVAL-ADXL372Z?qs=%252BdQmOuGyFcG0QLzCQuUeJw%3D%3D) | ~$25 |
+| 1 | MCU Dev Kit | nRF54L15-DK (Nordic) | [Mouser](https://www.mouser.com/ProductDetail/Nordic-Semiconductor/nRF54L15-DK?qs=3vio67wFuYon2dql6VAuBQ%3D%3D) | $39.00 |
+| 2 | IMU Eval Board | EV_ICM-42688-P (TDK InvenSense) | [Mouser](https://www.mouser.com/ProductDetail/TDK-InvenSense/EV_ICM-42688-P?qs=hWgE7mdIu5SqHj7syF9KYA%3D%3D) | $32.45 ⚠️ 백오더 (5/11 입고) |
+| 3 | High-g Accel Stamp Board | EVAL-ADXL372Z (Analog Devices) | [Mouser](https://www.mouser.com/ProductDetail/Analog-Devices/EVAL-ADXL372Z?qs=%252BdQmOuGyFcG0QLzCQuUeJw%3D%3D) | $41.63 |
 | 4 | 점퍼와이어 | Jumper wire kit | Mouser에서 "jumper wire" 검색 | ~$5 |
-| | **Phase 0 합계** | | | **~$87** |
+| | **Phase 0 합계** | | | **~$118** |
 
 ### Phase 0 벤치 구성도
 
@@ -116,6 +116,6 @@ DK (집에서 펌웨어 개발/디버깅 전용)
 
 | Phase | 추가 비용 | 누적 합계 | Mouser 주문 |
 |-------|----------|----------|------------|
-| Phase 0 | ~$87 | ~$87 | **지금 주문** |
-| Phase 1 | ~$41 | ~$128 | Phase 0 완료 후 |
-| Phase 2 | ~$60 (1pcs) | ~$188 | Phase 1 완료 후 |
+| Phase 0 | ~$118 | ~$118 | **지금 주문** |
+| Phase 1 | ~$41 | ~$159 | Phase 0 완료 후 |
+| Phase 2 | ~$60 (1pcs) | ~$219 | Phase 1 완료 후 |
